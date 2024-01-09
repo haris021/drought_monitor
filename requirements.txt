@@ -3,3 +3,4 @@ geopandas
 folium
 plotly
 ee
+geemap
