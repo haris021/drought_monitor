@@ -29,6 +29,19 @@ selection_dict = {  'spei03': 'SPEI_03_month',
                     'spei09': 'SPEI_09_month',
                     'spei12': 'SPEI_12_month'  }
 
+month_dict = {  '1': 'January',
+                    '2': 'February',
+                    '3': 'March',
+                    '4': 'April',
+             '5':'May',
+             '6':'June',
+             '7':'July',
+             '8':'August',
+             '9':'September',
+             '10':'October',
+             '11':'November',
+             '12':'December'}
+
 
 
 
@@ -40,9 +53,9 @@ division = st.sidebar.selectbox("Select Division", tuple(divisions_master_df["Di
 st.sidebar.divider()
 st.sidebar.subheader("Map Options")
 
-map_month = st.sidebar.select_slider("Select Month", options= tuple(range(1,13)))
+#map_month = st.sidebar.select_slider("Select Month", options= tuple(range(1,13)))
 
-#map_month = st.sidebar.selectbox("Select Month", options= tuple(['January','February','March','April','May','June','July','August','September','October','November','December']))
+map_month = st.sidebar.selectbox("Select Month", options= tuple(['January','February','March','April','May','June','July','August','September','October','November','December']))
 map_year = st.sidebar.select_slider("Select Year", options = tuple(range(1950, 2023)))
 
 
