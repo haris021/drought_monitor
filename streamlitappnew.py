@@ -139,3 +139,11 @@ st.download_button(
   file_name=f'{division.upper().replace(" ","_")}_{drough_index.upper()}_{time_begin}_{time_end}.csv',
   mime='text/csv',
 )
+st.subheader("Data References")
+st.markdown(
+"""
+1.Reig-Gracia, Fergus; Latorre Garcés, Borja; 2023; SPEIbase v.2.9 [Dataset]; DIGITAL.CSIC; Version 2.9. doi:10.20350/digitalCSIC/15470
+
+2.Vicente-Serrano S.M., Beguería S., López-Moreno J.I. (2010): A Multi-scalar drought index sensitive to global warming: The Standardized Precipitation Evapotranspiration Index - SPEI. Journal of Climate 23(7), 1696-1718. doi:10.1175/2009JCLI2909.1
+"""
+)
