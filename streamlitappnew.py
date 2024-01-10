@@ -38,7 +38,9 @@ division = st.sidebar.selectbox("Select Division", tuple(divisions_master_df["Di
 st.sidebar.divider()
 st.sidebar.subheader("Map Options")
 
-map_month = st.sidebar.select_slider("Select Month", options= tuple(range(1,13)))
+#map_month = st.sidebar.select_slider("Select Month", options= tuple(range(1,13)))
+
+map_month = st.sidebar.selectbox("Select Month", options= tuple(['January','February','March','April','May','June','July','August','September','October','November','December']))
 map_year = st.sidebar.select_slider("Select Year", options = tuple(range(1950, 2023)))
 
 
