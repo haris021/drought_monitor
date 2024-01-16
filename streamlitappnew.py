@@ -17,6 +17,15 @@ ee.Initialize(credentials)
 
 
 
+@st.cache_data
+def get_start_and_end_date(data):
+    dataset = ee.ImageCollection(data) 
+    info = dataset.aggregate_array('system:time_start').getInfo()
+    time_start  = datetime(1970, 1, 1) + timedelta(seconds=(info[0] /1000))
+    time_end = datetime(1970, 1, 1) + timedelta(seconds=(info[-1] /1000))
+
+    return time_start, time_end
+
 def convert_df_to_csv(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv().encode('utf-8')
@@ -29,21 +38,6 @@ selection_dict = {  'spei03': 'SPEI_03_month',
                     'spei09': 'SPEI_09_month',
                     'spei12': 'SPEI_12_month'  }
 
-month_dict = {  'January': '1',
-                 'February':   '2',
-                   'March': '3',
-                   'April': '4',
-             'May':'5',
-             'June':'6',
-             'July':'7',
-             'August':'8',
-             'September':'9',
-             'October':'10',
-             'November':'11',
-             'December':'12'}
-
-
-
 
 st.title("Pakistan Drought Monitor")
 
@@ -53,10 +47,18 @@ division = st.sidebar.selectbox("Select Division", tuple(divisions_master_df["Di
 st.sidebar.divider()
 st.sidebar.subheader("Map Options")
 
-map_month = st.sidebar.select_slider("Select Month", options= tuple(range(1,13)))
 
-#map_month = st.sidebar.selectbox("Select Month", options= tuple(['January','February','March','April','May','June','July','August','September','October','November','December']))
-map_year = st.sidebar.select_slider("Select Year", options = tuple(range(1950, 2023)))
+dataset = ee.ImageCollection("CSIC/SPEI/2_8") 
+start_date, end_date = get_start_and_end_date("CSIC/SPEI/2_8")
+
+map_year = st.sidebar.select_slider("Select Year", options = tuple(range(start_date.year, end_date.year+1)))
+
+if map_year == start_date.year:
+  map_month = st.sidebar.select_slider("Select Month", options= tuple(range(start_date.month,13)))
+elif map_year == end_date.year:
+  map_month = st.sidebar.select_slider("Select Month", options= tuple(range(1,end_date.month+1)))
+else:
+   map_month = st.sidebar.select_slider("Select Month", options= tuple(range(1,13)))
 
 
 st.sidebar.divider()
@@ -83,11 +85,11 @@ division_df = division_df.loc[(division_df['time'].dt.year>=time_begin) & (divis
 
 
 
-dataset = ee.ImageCollection("CSIC/SPEI/2_8") 
+
 dataset = dataset.filterDate(f'{map_year}-{map_month}-01', f'{map_year + 1}-{map_month}-01').select(selection_dict[drough_index]).first()
 style = {"color": "black"}
 Map = geemap.Map()
-Map.add_shapefile("PAK_adm2.shp", "Division Bounds", style_function = lambda x: style)
+Map.add_shapefile("shapefile/PAK_adm2.shp", "Division Bounds", style_function = lambda x: style)
 
 visParams = {
   "min": -2.33,
@@ -105,7 +107,7 @@ Map.setCenter(69.3451, 30.3753, 5.3)
 
 
 
-pakistan_boundary = gpd.read_file("Pakistan_with_Kashmir.shp")
+pakistan_boundary = gpd.read_file("shapefile/Pakistan_with_Kashmir.shp")
 pakistan_boundary_js = js.loads(pakistan_boundary.to_json())['features'][0]['geometry']['coordinates']
 pakistan_geometry = ee.Geometry.MultiPolygon(pakistan_boundary_js)
 
@@ -155,12 +157,4 @@ st.download_button(
   data=convert_df_to_csv(division_df[['time', drough_index]]),
   file_name=f'{division.upper().replace(" ","_")}_{drough_index.upper()}_{time_begin}_{time_end}.csv',
   mime='text/csv',
-)
-st.subheader("Data References")
-st.markdown(
-"""
-1.Reig-Gracia, Fergus; Latorre Garcés, Borja; 2023; SPEIbase v.2.9 [Dataset]; DIGITAL.CSIC; Version 2.9. doi:10.20350/digitalCSIC/15470
-
-2.Vicente-Serrano S.M., Beguería S., López-Moreno J.I. (2010): A Multi-scalar drought index sensitive to global warming: The Standardized Precipitation Evapotranspiration Index - SPEI. Journal of Climate 23(7), 1696-1718. doi:10.1175/2009JCLI2909.1
-"""
 )
