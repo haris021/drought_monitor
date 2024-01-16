@@ -89,7 +89,7 @@ division_df = division_df.loc[(division_df['time'].dt.year>=time_begin) & (divis
 dataset = dataset.filterDate(f'{map_year}-{map_month}-01', f'{map_year + 1}-{map_month}-01').select(selection_dict[drough_index]).first()
 style = {"color": "black"}
 Map = geemap.Map()
-Map.add_shapefile("shapefile/PAK_adm2.shp", "Division Bounds", style_function = lambda x: style)
+Map.add_shapefile("PAK_adm2.shp", "Division Bounds", style_function = lambda x: style)
 
 visParams = {
   "min": -2.33,
