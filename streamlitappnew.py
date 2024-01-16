@@ -107,7 +107,7 @@ Map.setCenter(69.3451, 30.3753, 5.3)
 
 
 
-pakistan_boundary = gpd.read_file("shapefile/Pakistan_with_Kashmir.shp")
+pakistan_boundary = gpd.read_file("Pakistan_with_Kashmir.shp")
 pakistan_boundary_js = js.loads(pakistan_boundary.to_json())['features'][0]['geometry']['coordinates']
 pakistan_geometry = ee.Geometry.MultiPolygon(pakistan_boundary_js)
 
