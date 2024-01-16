@@ -48,8 +48,8 @@ st.sidebar.divider()
 st.sidebar.subheader("Map Options")
 
 
-dataset = ee.ImageCollection("CSIC/SPEI/2_8") 
-start_date, end_date = get_start_and_end_date("CSIC/SPEI/2_8")
+dataset = ee.ImageCollection("CSIC/SPEI/2_9") 
+start_date, end_date = get_start_and_end_date("CSIC/SPEI/2_9")
 
 map_year = st.sidebar.select_slider("Select Year", options = tuple(range(start_date.year, end_date.year+1)))
 
